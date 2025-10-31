@@ -1,31 +1,26 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { connectToDatabase } from "@/lib/mongodb";
+import Product from "@/models/product";
 
 export const dynamic = "auto";
 export const revalidate = 60; // ISR: regenerate every 60 seconds
 
+// Fetch a single product directly from MongoDB
 async function getProductBySlug(slug) {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/products/${slug}`,
-        { next: { revalidate: 60 } }
-    );
-
-    if (!res.ok) return null;
-    return res.json();
+    await connectToDatabase();
+    const product = await Product.findOne({ slug }).lean();
+    return product ? JSON.parse(JSON.stringify(product)) : null;
 }
 
+// Generate static params directly from DB
 export async function generateStaticParams() {
-    // Pre-generate some product pages at build time
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/products`,
-        { cache: "force-cache" }
-    );
-
-    if (!res.ok) return [];
-    const products = await res.json();
+    await connectToDatabase();
+    const products = await Product.find({}, "slug").lean();
     return products.map((p) => ({ slug: p.slug }));
 }
 
+// Page component
 export default async function ProductPage({ params }) {
     const { slug } = await params;
     const product = await getProductBySlug(slug);
