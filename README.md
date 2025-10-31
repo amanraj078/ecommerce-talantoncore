@@ -79,9 +79,9 @@ Then open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ## 🖼️ Screenshots
 
--   ![Home](public/screenshots/home.png)
--   ![Add Product](public/screenshots/product-form.png)
--   ![Recommendations](public/screenshots/recommendations.png)
+-   ![Home](public/home.png)
+-   ![Add Product](public/product-form.png)
+-   ![Recommendations](public/recommendations.png)
 
 ---
 
