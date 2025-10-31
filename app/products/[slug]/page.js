@@ -3,10 +3,9 @@ import { notFound } from "next/navigation";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/product";
 
-export const dynamic = "auto";
-export const revalidate = 60; // ISR: regenerate every 60 seconds
+export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
-// Fetch a single product directly from MongoDB
 async function getProductBySlug(slug) {
     await connectToDatabase();
     const product = await Product.findOne({ slug }).lean();
